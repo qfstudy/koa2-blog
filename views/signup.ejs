@@ -1,0 +1,108 @@
+<%- include("header",{type:'signup'}) %>
+	<div class="signup-container">
+		<form class="form create">
+      <input class="name" type="text" placeholder="用户名"/>
+      <input class="password" type="password" placeholder="请输入密码" />
+      <input class="repeatpass" type="password" placeholder="请确认密码"　class="repeatpass" />
+			<div class="avatar-wrapper">
+				<div class="avatar">
+          <span>上传头像</span>
+          <input class="file" type="file" name="avatar" id="avatar">
+        </div>
+				<input type="hidden" id="avatarVal">
+        <div>
+          <img class="preview" alt="图像预览" src="./avatar-placeholder.png">
+        </div>
+			</div>
+      <div class="submit">注册</div>
+		</form>
+	</div>
+	<script>
+		$(window).keyup(function (e) {
+			//console.log(e.keyCode)
+			if (e.keyCode === 13) {
+				$('.submit').click()
+			}
+		})
+		$('#avatar').change(function(){
+			if (this.files.length !== 0) {
+				let file = this.files[0]
+				let	reader = new FileReader()
+				if (!reader) {
+					this.value = '';
+					return;
+				};
+				console.log(file.size,file.type)
+				if (!/image/g.test(file.type)) {
+					tooltip("请上传图片文件!")
+					$('#avatarVal').val('')
+					$('form .preview').attr('src', '')
+					$('form .preview').fadeOut()
+					return 
+				}
+				reader.onload = function (e) {
+					this.value = '';
+					$('form .preview').attr('src', e.target.result)
+					$('form .preview').fadeIn()
+          let image = new Image();
+          image.onload = function(){ 
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext("2d");
+            canvas.width = 100;
+            canvas.height = 100;
+            ctx.clearRect(0, 0, 100, 100);
+            ctx.drawImage(image, 0, 0, 100, 100);
+            let blob = canvas.toDataURL("image/png");
+            $('#avatarVal').val(blob)
+          }
+          image.src = e.target.result
+				};
+				reader.readAsDataURL(file);
+			};
+		})
+		$('.submit').click(function(){
+			if ($('.name').val().trim() === '') {
+				tooltip('请输入用户名')
+			}else if($('.name').val().match(/[<'">]/g)){
+				tooltip('请输入合法字符')
+      }else if(($('.password').val().trim() === '')){
+        tooltip('请输入密码')
+      }else if(($('.repeatpass').val().trim() === '')){
+        tooltip('请确认密码')
+      }else if($('.password').val().trim()!==$('.repeatpass').val().trim()){
+        tooltip('两次输入的密码不一致')
+      }else if($('#avatarVal').val() === ''){
+				tooltip('请上传头像！')
+			}else{
+				$.ajax({
+					url: "/signup",
+					data: {
+						name: $('.name').val().trim(),
+						password: $('.password').val().trim(),
+						repeatpass: $('.repeatpass').val().trim(),
+						avatar: $('#avatarVal').val().trim(),
+					},
+					type: "POST",
+					cache: false,
+					dataType: 'json',
+					success: function (message) {
+						console.log(message)
+            if(message.code === 200){
+              tooltip('注册成功')
+              let timer=setTimeout(function(){
+								window.location.href = "/signin"	
+								clearTimeout(timer)  
+							},1000)
+            }else{
+            	tooltip(message.message)
+            }
+					},
+					error: function (error) {
+						console.log(error)
+						alert('异常');
+					}
+				})			
+			}
+		})	
+	</script>
+<% include footer %>

@@ -1,0 +1,52 @@
+<%- include("header",{type:'signin'}) %>
+	<div class="signin-container">
+		<form class="form create">
+      <input type="text" placeholder="用户名"class="name"/>
+      <input type="password" placeholder="密码" class="password"/>
+			<div class="submit">登录</div>
+		</form>		
+	</div>
+	<script>
+		$(window).keyup(function(e){
+			//console.log(e.keyCode)
+			if (e.keyCode == 13) {
+				$('.submit').click()
+			}
+		})
+		$('.submit').click(function(){
+			if ($('.name').val().trim() === '' || $('.password').val().trim() === '' ) {
+				tooltip('请输入用户名或密码')
+			}else{
+				$.ajax({
+					url: "/signin",
+					data: {
+						name: $('.name').val(),
+						password: $('.password').val()
+					},
+					type: "POST",
+					cache: false,
+					dataType: 'json',
+					success: function (message) {
+						if (message.code === 200) {
+              tooltip('登录成功')
+							setTimeout(function(){
+								window.location.href = "/"
+							},1000)	  
+						} else if(message.code === 500){
+							$('input').val('')
+							tooltip('用户名或密码错误')	
+						}else{
+              console.log('错误')
+            }
+					},
+					error: function (error) {
+            console.log(error)
+						alert('异常');
+					}
+				})			
+			}
+		})		
+	</script>
+<% include footer %>
+
+	

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>myblog</title>
+	<link rel="stylesheet" href="/index.css">
+	<link rel="stylesheet" href="/css/github-markdown.min.css">
+	<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+	<script>
+		function tooltip(txt){
+			$('.message').text(txt)
+			$('.message').animate({
+				top:0
+			})
+			setTimeout(function(){
+				$('.message').animate({
+					top: '-100%'
+				})
+			},1500)
+		}
+		$(function(){
+			$('.signout').click(function(){
+				$.ajax({
+					url: "/signout",
+					type: "GET",
+					cache: false,
+					dataType: 'json',
+					success: function (message) {
+						if (message) {
+							tooltip('登出成功')
+							setTimeout(function(){
+								location.href = "/"
+							},1500)	
+						}
+					},
+					error: function () {
+						alert('异常');
+					}
+				})
+			})
+		})
+	</script>
+</head>
+<body>
+  <span class="message"></span>
+  
+	<header class="header-wrapper">
+		<div class="header-right">
+			<%  if(session.user){ %>
+				<div class="header-user">
+					<a target="__blank" href="https://github.com/qfstudy/myblog">GitHub</a>
+					<% if(type === 'allArticle'){ %>
+						<a class="active" href="/">首页</a>
+					<% }else{ %>
+						<a href="/">首页</a>
+					<% }%>
+					<% if(type === 'article'){ %>
+						<a class="active" href="/?author=<%= session.user %>">我的文章</a>
+					<% }else{ %>
+						<a href="/?author=<%= session.user %>">我的文章</a>
+					<% }%>
+					<% if(type === 'write'){ %>
+						<a class="active" href="/write">写文章</a>
+					<% }else{ %>
+						<a href="/write">写文章</a>
+					<% }%>
+					<span class="signout">登出</span>
+				</div>
+			<% } %>
+			<% if(!session.user){ %>
+				<div class="none-user header-user">
+					<a target="__blank" href="https://github.com/qfstudy/myblog">GitHub</a>
+					<% if(type === 'allArticle'){ %>
+						<a class="active" href="/">首页</a>
+					<% }else{ %>
+						<a href="/">首页</a>
+					<% }%>
+					<% if(type === 'signup'){ %>
+						<a class="active" href="/signup">注册</a>
+					<% }else{ %>
+						<a href="/signup">注册</a>
+					<% }%>
+					<% if(type === 'signin'){ %>
+						<a class="active" href="/signin">登录</a>
+					<% }else{ %>
+						<a href="/signin">登录</a>
+					<% }%>
+				</div>
+			<% } %>
+		</div>
+	</header>
