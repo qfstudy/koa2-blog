@@ -5,7 +5,8 @@
 	<title>myblog</title>
 	<link rel="stylesheet" href="/index.css">
 	<link rel="stylesheet" href="/css/github-markdown.min.css">
-	<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+	<!-- <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script> -->
+	<script src="/js/jquery.min.js"></script>
 	<script>
 		function tooltip(txt){
 			$('.message').text(txt)
@@ -55,9 +56,9 @@
 						<a href="/">首页</a>
 					<% }%>
 					<% if(type === 'article'){ %>
-						<a class="active" href="/?author=<%= session.user %>">我的文章</a>
+						<a class="active" href="/author/?author=<%= session.user %>">我的文章</a>
 					<% }else{ %>
-						<a href="/?author=<%= session.user %>">我的文章</a>
+						<a href="/author/?author=<%= session.user %>">我的文章</a>
 					<% }%>
 					<% if(type === 'write'){ %>
 						<a class="active" href="/write">写文章</a>
