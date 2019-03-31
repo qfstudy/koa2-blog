@@ -1,0 +1,165 @@
+<%- include("header",{type:''}) %>
+<div class="article-wrapper">
+	<div class="article-container">
+    <section class="title-content">
+      <div class="title-wrapper">
+        <span class="article-bar"></span>
+        <span class="title"><%= posts.title %></span>
+      </div>
+      <div class="content markdown markdown-body">
+        <%- posts.content %>
+      </div>
+    </section>
+
+    <section class="bottom-other">
+      <span><%= posts.moment %></span>
+      <span title="<%= posts.name %>">
+        <a href="/author?author=<%= posts.name %> "><%= posts.name %></a>
+      </span>
+      <span>评论:(<%= posts.comments %>)</span>
+      <span>阅读:(<%= posts.pv %>)</span>
+      <span class="edit">
+        <% if(session && session.user ===  posts.name  ){ %>
+        <span><a href="<%= posts['id'] %>/edit">编辑</a></span>
+        <span><a class="delete_post">删除</a></span>
+        <% } %>
+      </span>
+    </section>
+  </div>
+  
+  <span class="comment-bar"></span>
+
+	<div class="article-comment-wrap">
+    <% if(session.user){ %>
+      <form class="form" method="post" action="/article/<%= posts.id %>">
+        <div class="content-wrapper">
+          <textarea class="content textarea-comment-content"></textarea>   
+        </div>
+        <span class="submit">提交留言</span>
+      </form>
+      <span class="comment-bar"></span>
+		<% } else{ %>
+			<span class="tips">登录之后才可以评论</span>
+    <% } %>
+    
+		<% if (commentPageLength > 0) { %>
+      <div class="comment-wrapper markdown">
+        <% pageOne.forEach(function(res){ %>
+          <div class="content-list">
+            <div class="user-message">
+              <img class="user-avatar" src="/images/<%= res['avatar'] %>.png" alt="">
+              <span class="user-name"><%= res['name'] %></span>
+            </div>
+            <div class="comment-content">
+              <%- res['content'] %>
+            </div>
+            <div class="comment-bottom">
+              <span class="comment-time"><%= res['moment'] %></span>
+              <span class="comment-name">
+                <% if(session && session.user ===  res['name']){ %>
+                  <a class="delete-comment" href="javascript:deleteComment(<%= res['id'] %>);"> 删除</a>
+                <% } %>
+              </span>
+            </div>
+          </div>
+        <% }) %>
+      </div>	
+      <span class="comment-bar"></span>
+		<% } else{ %>
+			<span class="tips">还没有评论，赶快去评论吧！</span>
+		<% } %>
+  </div>
+</div>
+	<script>
+		var userName = "<%- session.user %>"
+		// 删除文章
+		$('.delete_post').click(() => {
+			$.ajax({
+				url: "/article/<%= posts.id %>/remove",
+				type: 'POST',
+				cache: false,
+				success: function (message) {
+					if (message.code === 200) {
+						tooltip('删除文章成功')
+						setTimeout(() => {
+							window.location.href = "/"
+						}, 1000)
+					} 
+					if (message.code === 500) {
+						tooltip('删除文章失败');
+						setTimeout(() => {
+							window.location.reload()
+						}, 1000)
+					}
+					if(message.code===404){
+						tooltip('没有权限删除文章')
+					}
+				}
+			})
+		})
+		// 评论
+		var isAllow = true
+		$('.submit').click(function(){
+			if (!isAllow) return
+			isAllow = false
+			if ($('.textarea-comment-content').val().trim() === '') {
+				tooltip('请输入评论！')
+			}else{
+        console.log(location.pathname)
+        console.log(location.pathname.split('/'))
+				$.ajax({
+          url: "/article/<%= posts.id %>/comment",
+					// url: location.pathname.split('/')[2],
+					data:{
+            content:document.querySelector('.textarea-comment-content').value
+          },
+					type: "POST",
+					cache: false,
+					dataType: 'json',
+					success: function (message) {
+						if (message.code===200) {
+							tooltip('留言成功')							
+							setTimeout(()=>{
+								isAllow = true
+								window.location.reload()
+							},1500)  	
+						}else if(message.code===500){
+							tooltip('留言失败')
+						}
+					},
+					error: function (err) {
+            console.log(err)
+						alert('异常')
+					}
+				})
+			}
+		})
+		// 删除评论
+		function deleteComment(id) {
+			$.ajax({
+				url: "/article/<%= posts.id %>/comment/" + id + "/remove",
+				type: 'POST',
+				cache: false,
+				success: function (message) {
+					if (message.code === 200) {
+						tooltip('删除留言成功')
+						setTimeout(() => {
+							window.location.reload()
+						}, 1000)
+					} else if (message.code == 500) {
+						tooltip('删除留言失败');
+						setTimeout(() => {
+							window.location.reload()
+						}, 1500)
+					}else if(message.code===404){
+						tooltip('没有权限')
+					}
+				},
+				error: function (err) {
+          console.log(err)
+					alert('异常')
+				}
+			})
+		}
+	</script>
+<% include footer %>
