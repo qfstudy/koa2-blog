@@ -7,38 +7,31 @@ const converter = new showdown.Converter()
 
 // 文章详情页
 router.get('/article/:articleId', async(ctx, next) => {
-  let postId = ctx.params.articleId,
-    count,
+  let articleId = ctx.params.articleId,
     res,
-    pageOne;
-  await mysqlModel.searchByArticleId(postId)
+    commentRes
+  await mysqlModel.searchByArticleId(articleId)
     .then(result => {
       res = result
     })
-  await mysqlModel.updateArticlePv(postId)
-  await mysqlModel.searchCommentByPage(1, postId)
+  await mysqlModel.updateArticlePv(articleId)
+  await mysqlModel.searchCommentByArticleId(articleId)
     .then(result => {
-      pageOne = result
-    })
-  await mysqlModel.searchCommentCountById(postId)
-    .then(result => {
-      // console.log('count'+result)
-      count = result[0].count
+      commentRes = result
     })
   await ctx.render('article', {
     session: ctx.session,
-    posts: res[0],
-    commentLength: count,
-    commentPageLength: Math.ceil(count / 10),
-    pageOne: pageOne
+    articles: res[0],
+    commentLength: commentRes.length,//res[0].comments
+    commentRes
   })
 })
 
 // 删除文章
 router.post('/article/:articleId/remove', async(ctx, next) => {
-  let postId = ctx.params.articleId,
+  let articleId = ctx.params.articleId,
   allow;
-  await mysqlModel.searchByArticleId(postId)
+  await mysqlModel.searchByArticleId(articleId)
     .then(res => {
       if (res[0].name !== ctx.session.user) {
         allow = false
@@ -47,8 +40,8 @@ router.post('/article/:articleId/remove', async(ctx, next) => {
       }
     })
   if (allow) {
-    await mysqlModel.deleteAllArticleComment(postId)
-    await mysqlModel.deleteArticle(postId)
+    await mysqlModel.deleteAllArticleComment(articleId)
+    await mysqlModel.deleteArticle(articleId)
       .then(() => {
         ctx.body = {
           code: 200,
@@ -69,10 +62,10 @@ router.post('/article/:articleId/remove', async(ctx, next) => {
 })
 
 // 发布评论
-router.post('/article/:postId/comment', async(ctx, next) => {
+router.post('/article/:articleId/comment', async(ctx, next) => {
   let name = ctx.session.user,
     content = ctx.request.body.content,
-    postId = ctx.params.postId,
+    articleId = ctx.params.articleId,
     time = moment().format('YYYY-MM-DD HH:mm:ss'),
     avatar;
   // console.log('发布评论')
@@ -80,8 +73,8 @@ router.post('/article/:postId/comment', async(ctx, next) => {
     .then(res => {
       avatar = res[0]['avatar']
     })
-  await mysqlModel.addComment([name, converter.makeHtml(content), time, postId, avatar])
-  await mysqlModel.addArticleCommentCount(postId)
+  await mysqlModel.addComment([name, converter.makeHtml(content), time, articleId, avatar])
+  await mysqlModel.addArticleCommentCount(articleId)
     .then(() => {
       ctx.body = {
         code:200,
@@ -96,8 +89,8 @@ router.post('/article/:postId/comment', async(ctx, next) => {
 })
 
 // 删除评论
-router.post('/article/:postId/comment/:commentId/remove', async(ctx, next) => {
-  let postId = ctx.params.postId,
+router.post('/article/:articleId/comment/:commentId/remove', async(ctx, next) => {
+  let articleId = ctx.params.articleId,
     commentId = ctx.params.commentId,
     allow;
   await mysqlModel.searchComment(commentId)
@@ -109,8 +102,7 @@ router.post('/article/:postId/comment/:commentId/remove', async(ctx, next) => {
       }
     })
     if (allow) {
-      console.log(555)
-      await mysqlModel.reduceArticleCommentCount(postId)
+      await mysqlModel.reduceArticleCommentCount(articleId)
       await mysqlModel.deleteComment(commentId)
         .then(() => {
           ctx.body = {
@@ -126,7 +118,7 @@ router.post('/article/:postId/comment/:commentId/remove', async(ctx, next) => {
     } else {
       ctx.body = {
         code: 404,
-        message: '无权限'
+        message: '没有权限'
       }
   }
 })

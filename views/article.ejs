@@ -4,23 +4,23 @@
     <section class="title-content">
       <div class="title-wrapper">
         <span class="article-bar"></span>
-        <span class="title"><%= posts.title %></span>
+        <span class="title"><%= articles.title %></span>
       </div>
       <div class="content markdown markdown-body">
-        <%- posts.content %>
+        <%- articles.content %>
       </div>
     </section>
 
     <section class="bottom-other">
-      <span><%= posts.moment %></span>
-      <span title="<%= posts.name %>">
-        <a href="/author?author=<%= posts.name %> "><%= posts.name %></a>
+      <span><%= articles.moment %></span>
+      <span title="<%= articles.name %>">
+        <a href="/author?author=<%= articles.name %> "><%= articles.name %></a>
       </span>
-      <span>评论:(<%= posts.comments %>)</span>
-      <span>阅读:(<%= posts.pv %>)</span>
+      <span>评论:(<%= articles.comments %>)</span>
+      <span>阅读:(<%= articles.pv %>)</span>
       <span class="edit">
-        <% if(session && session.user ===  posts.name  ){ %>
-        <span><a href="/article/<%= posts['id'] %>/edit">编辑</a></span>
+        <% if(session && session.user ===  articles.name  ){ %>
+        <span><a href="/article/<%= articles['id'] %>/edit">编辑</a></span>
         <span><a class="delete_post">删除</a></span>
         <% } %>
       </span>
@@ -31,7 +31,7 @@
 
 	<div class="article-comment-wrap">
     <% if(session.user){ %>
-      <form class="form" method="post" action="/article/<%= posts.id %>">
+      <form class="form">
         <div class="content-wrapper">
           <textarea class="content textarea-comment-content"></textarea>   
         </div>
@@ -42,15 +42,15 @@
 			<span class="tips">登录之后才可以评论</span>
     <% } %>
     
-		<% if (commentPageLength > 0) { %>
+		<% if (commentLength > 0) { %>
       <div class="comment-wrapper markdown">
-        <% pageOne.forEach(function(res){ %>
+        <% commentRes.forEach(function(res){ %>
           <div class="content-list">
             <div class="user-message">
               <img class="user-avatar" src="/images/<%= res['avatar'] %>.png" alt="">
               <span class="user-name"><%= res['name'] %></span>
             </div>
-            <div class="comment-content">
+            <div class="comment-content markdown-body">
               <%- res['content'] %>
             </div>
             <div class="comment-bottom">
@@ -75,7 +75,7 @@
 		// 删除文章
 		$('.delete_post').click(() => {
 			$.ajax({
-				url: "/article/<%= posts.id %>/remove",
+				url: "/article/<%= articles.id %>/remove",
 				type: 'POST',
 				cache: false,
 				success: function (message) {
@@ -108,8 +108,7 @@
         console.log(location.pathname)
         console.log(location.pathname.split('/'))
 				$.ajax({
-          url: "/article/<%= posts.id %>/comment",
-					// url: location.pathname.split('/')[2],
+          url: "/article/<%= articles.id %>/comment",
 					data:{
             content:document.querySelector('.textarea-comment-content').value
           },
@@ -137,7 +136,7 @@
 		// 删除评论
 		function deleteComment(id) {
 			$.ajax({
-				url: "/article/<%= posts.id %>/comment/" + id + "/remove",
+				url: "/article/<%= articles.id %>/comment/" + id + "/remove",
 				type: 'POST',
 				cache: false,
 				success: function (message) {

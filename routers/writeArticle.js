@@ -10,7 +10,7 @@ const converter = new showdown.Converter()
 router.get('/write', async(ctx, next) => {
   await noLogin(ctx)
   await ctx.render('writeArticle', {
-    session: ctx.session,
+    session: ctx.session
   })
 })
 
