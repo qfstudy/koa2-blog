@@ -51,6 +51,7 @@ app.use(require('./routers/signout.js').routes())
 app.use(require('./routers/allArticle.js').routes())
 app.use(require('./routers/writeArticle.js').routes())
 app.use(require('./routers/article.js').routes())
+app.use(require('./routers/editArticle.js').routes())
 
 app.listen(mysqlConfig.port)
 

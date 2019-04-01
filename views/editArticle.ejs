@@ -1,0 +1,50 @@
+<%- include("header",{type:''}) %>
+<div class="create-container">
+		<div class="form create">
+					<div class="title-wrapper">
+							<input placeholder="标题" type="text" class="title" value="<%- postsTitle %>">
+					</div>
+					<ul class="nav">
+							<li class="submit">保存修改</li>
+					</ul>
+					<div class="content-wrapper" id="textarea">
+							<div class="content" id="write-article" contenteditable="true"><%= postsContent %></div>   
+					</div>
+		</div>
+	</div>
+<script>
+	$('.submit').click(()=>{
+		$.ajax({
+            url: '/article/<%= postId %>/edit',
+            data: {
+							title: $('.title').val(),
+							content: document.getElementById('write-article').innerText
+						},
+            type: "POST",
+            cache: false,
+            dataType: 'json',
+            success: function (msg) {
+							if (msg.code===200) {
+								tooltip('修改成功')
+								setTimeout(()=>{
+									window.location.href="/"
+								},1000)
+								return
+							}
+							if(msg.code===500){
+								tooltip('编辑失败')
+								return
+							}
+							if(msg.code===404){
+								tooltip('没有权限')
+								return
+							}
+            },
+            error: function (err) {
+							console.log(err)
+							alert('异常')
+            }
+        })		
+	})
+</script>
+<% include footer %>

@@ -20,7 +20,7 @@
       <span>阅读:(<%= posts.pv %>)</span>
       <span class="edit">
         <% if(session && session.user ===  posts.name  ){ %>
-        <span><a href="<%= posts['id'] %>/edit">编辑</a></span>
+        <span><a href="/article/<%= posts['id'] %>/edit">编辑</a></span>
         <span><a class="delete_post">删除</a></span>
         <% } %>
       </span>
