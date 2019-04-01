@@ -9,7 +9,6 @@
           <span>上传头像</span>
           <input class="file" type="file" name="avatar" id="avatar">
         </div>
-				<input type="hidden" id="avatarVal">
         <div>
           <img class="preview" alt="图像预览" src="./avatar-placeholder.png">
         </div>
@@ -27,38 +26,26 @@
 		$('#avatar').change(function(){
 			if (this.files.length !== 0) {
 				let file = this.files[0]
+				console.log(this.files)
 				let	reader = new FileReader()
 				if (!reader) {
-					this.value = '';
-					return;
-				};
+					this.value = ''
+					return
+				}
 				console.log(file.size,file.type)
 				if (!/image/g.test(file.type)) {
 					tooltip("请上传图片文件!")
-					$('#avatarVal').val('')
-					$('form .preview').attr('src', '')
-					$('form .preview').fadeOut()
+					$('.preview').attr('src', '')
+					$('.preview').fadeOut()
 					return 
 				}
 				reader.onload = function (e) {
-					this.value = '';
-					$('form .preview').attr('src', e.target.result)
-					$('form .preview').fadeIn()
-          let image = new Image();
-          image.onload = function(){ 
-            let canvas = document.createElement('canvas');
-            let ctx = canvas.getContext("2d");
-            canvas.width = 100;
-            canvas.height = 100;
-            ctx.clearRect(0, 0, 100, 100);
-            ctx.drawImage(image, 0, 0, 100, 100);
-            let blob = canvas.toDataURL("image/png");
-            $('#avatarVal').val(blob)
-          }
-          image.src = e.target.result
-				};
-				reader.readAsDataURL(file);
-			};
+					this.value = ''
+					$('.preview').attr('src', e.target.result)
+					$('.preview').fadeIn()
+				}
+				reader.readAsDataURL(file)
+			}
 		})
 		$('.submit').click(function(){
 			if ($('.name').val().trim() === '') {
@@ -71,7 +58,7 @@
         tooltip('请确认密码')
       }else if($('.password').val().trim()!==$('.repeatpass').val().trim()){
         tooltip('两次输入的密码不一致')
-      }else if($('#avatarVal').val() === ''){
+      }else if($('.preview')[0].src === ''){
 				tooltip('请上传头像！')
 			}else{
 				$.ajax({
@@ -79,8 +66,7 @@
 					data: {
 						name: $('.name').val().trim(),
 						password: $('.password').val().trim(),
-						repeatpass: $('.repeatpass').val().trim(),
-						avatar: $('#avatarVal').val().trim(),
+						avatar: $('.preview')[0].src.trim()
 					},
 					type: "POST",
 					cache: false,
@@ -99,7 +85,7 @@
 					},
 					error: function (error) {
 						console.log(error)
-						alert('异常');
+						alert('异常')
 					}
 				})			
 			}

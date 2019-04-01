@@ -2,7 +2,6 @@ const router = require('koa-router')();
 const mysqlModel = require('../lib/mysql.js')
 const md5 = require('md5')
 const hadLogin = require('../middlewares/check.js').hadLogin
-// const noLogin = require('../middlewares/check.js').noLogin
 
 router.get('/signin', async (ctx, next) => {
   await hadLogin(ctx)
@@ -26,10 +25,6 @@ router.post('/signin', async (ctx, next) => {
           code: 200,
           message: '登录成功'
         }
-        // console.log('=============')
-        // console.log('ctx.session.id', ctx.session.id)
-        // console.log('session', ctx.session)
-        // console.log('--------')
       } else {
         ctx.body = {
           code: 500,

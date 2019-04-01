@@ -15,7 +15,7 @@ router.get('/signup',async(ctx, next) => {
 // post 注册
 router.post('/signup', async(ctx, next) => {
   // console.log(ctx.request.body)
-  let {name,password,repeatpass,avatar}=ctx.request.body
+  let {name,password,avatar}=ctx.request.body
   await mysqlModel.searchUserByName(name)
     .then(async (result) => {
       // console.log(result)
@@ -27,7 +27,8 @@ router.post('/signup', async(ctx, next) => {
       } else {
       
       let base64Data = avatar.replace(/^data:image\/\w+;base64,/, "")
-      let dataBuffer = new Buffer(base64Data, 'base64')
+      let dataBuffer = Buffer.from(base64Data, 'base64')
+
       let getName = Number(Math.random().toString().substr(3)).toString(36) + Date.now()
       await fs.writeFile('./public/images/' + getName + '.png', dataBuffer, err => { 
         if (err) throw err
@@ -40,6 +41,8 @@ router.post('/signup', async(ctx, next) => {
             code: 200,
             message: '注册成功'
           }
+        }).catch((err)=>{
+          console.log(err)
         })
       }
     })
