@@ -1,52 +1,55 @@
 <%- include("header",{type:'write'}) %>
 <div class="create-container">
 	<div class="form create">
-        <div class="title-wrapper">
-            <input placeholder="标题" type="text" class="title">
-        </div>
-        
-        <ul class="nav">
-            <li class="submit">发布文章</li>
-        </ul>
-        <div class="content-wrapper" id="textarea">
-            <div class="content" id="write-article" contenteditable="true"></div>   
-        </div>
+    <div class="title-wrapper">
+      <input placeholder="标题" type="text" class="title">
+    </div>
+    
+    <ul class="nav">
+      <li class="submit">发布文章</li>
+    </ul>
+    <div class="content-wrapper" id="textarea">
+      <!-- <div class="content" id="write-article" contenteditable="true"></div>    -->
+      <textarea class="content" id="write-article"></textarea>
+    </div>
 	</div>
 </div>
 <script>
-    document.getElementById("write-article").focus()
+    let ele=document.getElementById("write-article")
+    initTextarea(ele)
     $('.submit').click(()=>{
-        // console.log($('.content')[0].textContent.trim())
-        if ($('.title').val().trim() === '') {
-          tooltip('请输入标题')
-        }else if ($('.content')[0].textContent.trim() === '') {
-          tooltip('请输入内容')
-        }else{          
-            $.ajax({
-                url: "/write",
-                data: {
-                  title: document.querySelector('.title').value,
-                  content: document.getElementById('write-article').innerText
-                },
-                type: "POST",
-                cache: false,
-                dataType: 'json',
-                success: function (message) {
-                    if (message.code === 200) {
-                      tooltip('发布成功')
-                        setTimeout(()=>{
-                          window.location.href="/"
-                        },1000)
-                    }else{
-                      tooltip('发布失败')
-                    }
-                },
-                error: function (message) {
-                  console.log('message错误'+message)
-                  alert('异常');
-                }
-            })			
-        }   
+      if ($('.title').val().trim() === '') {
+        tooltip('请输入标题')
+      }else if ($('#write-article').val().trim() === '') {
+        tooltip('请输入内容')
+      }else{
+        console.log('写文章内容')   
+        console.log(document.getElementById('write-article'))
+        $.ajax({
+          url: "/write",
+          data: {
+            title: document.querySelector('.title').value,
+            content: document.getElementById('write-article').value
+          },
+          type: "POST",
+          cache: false,
+          dataType: 'json',
+          success: function (message) {
+            if (message.code === 200) {
+              tooltip('发布成功')
+                setTimeout(()=>{
+                  window.location.href="/"
+                },1000)
+            }else{
+              tooltip('发布失败')
+            }
+          },
+          error: function (message) {
+            console.log('message错误'+message)
+            alert('异常');
+          }
+        })			
+      }   
     })
 </script>
 <% include footer %>

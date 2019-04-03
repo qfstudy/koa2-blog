@@ -8,17 +8,20 @@
 				<li class="submit">保存修改</li>
 			</ul>
 			<div class="content-wrapper" id="textarea">
-				<div class="content" contenteditable="true"><%- articleContent %></div>   
+				<!-- <div class="content" contenteditable="true"><%= articleContent %></div>    -->
+				<textarea class="content"><%= articleContent %></textarea>   
 			</div>
 		</div>
 	</div>
 <script>
+	let ele=document.querySelector('.content')
+	initTextarea(ele)
 	$('.submit').click(()=>{
 		$.ajax({
             url: '/article/<%= articleId %>/edit',
             data: {
 							title: document.querySelector('.title').value,
-							content: document.querySelector('.content').innerText
+							content: document.querySelector('.content').value
 						},
             type: "POST",
             cache: false,

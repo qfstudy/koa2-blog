@@ -7,9 +7,9 @@ const converter = new showdown.Converter()
 
 // 文章详情页
 router.get('/article/:articleId', async(ctx, next) => {
-  let articleId = ctx.params.articleId,
-    res,
-    commentRes
+  let articleId = ctx.params.articleId
+  let res
+  let commentRes
   await mysqlModel.searchByArticleId(articleId)
     .then(result => {
       res = result
@@ -29,8 +29,8 @@ router.get('/article/:articleId', async(ctx, next) => {
 
 // 删除文章
 router.post('/article/:articleId/remove', async(ctx, next) => {
-  let articleId = ctx.params.articleId,
-  allow;
+  let articleId = ctx.params.articleId 
+  let allow
   await mysqlModel.searchByArticleId(articleId)
     .then(res => {
       if (res[0].name !== ctx.session.user) {

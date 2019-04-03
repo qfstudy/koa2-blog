@@ -6,7 +6,7 @@
         <span class="article-bar"></span>
         <span class="title"><%= articles.title %></span>
       </div>
-      <div class="content markdown markdown-body">
+      <div class="content markdown-body">
         <%- articles.content %>
       </div>
     </section>
@@ -21,7 +21,7 @@
       <span class="edit">
         <% if(session && session.user ===  articles.name  ){ %>
         <span><a href="/article/<%= articles['id'] %>/edit">编辑</a></span>
-        <span><a class="delete_post">删除</a></span>
+        <span><a class="deleteArticle">删除</a></span>
         <% } %>
       </span>
     </section>
@@ -64,16 +64,15 @@
           </div>
         <% }) %>
       </div>	
-      <span class="comment-bar"></span>
+      <!-- <span class="comment-bar"></span> -->
 		<% } else{ %>
 			<span class="tips">还没有评论，赶快去评论吧！</span>
 		<% } %>
   </div>
 </div>
 	<script>
-		var userName = "<%- session.user %>"
 		// 删除文章
-		$('.delete_post').click(() => {
+		$('.deleteArticle').click(() => {
 			$.ajax({
 				url: "/article/<%= articles.id %>/remove",
 				type: 'POST',

@@ -9,18 +9,24 @@
               <span class="title"><%= res.title %></span>
             </a>
           </div>
-          
-          <div class="content markdown">
-            <div class="text-content markdown-body"><%- res.content %></div>
-            <a class="text-link" href="/article/<%= res.id %>">阅读全文</a>
-          </div>
-          
+          <% if(res.content){ %>
+            <div class="content">
+              <div class="text-content"><%- res.content %></div>
+            </div>
+          <% } else { %>
+            <div class="content">
+              <div class="text-content"><%- res.title %></div>
+            </div>
+          <% } %>
           <div class="content-bottom-detail">
             <span class="create-time">
               <span><%= res.moment %></span>
-              <span><a href="/author/?author=<%= res.name %>"><%= res.name %></a></span>
+              <span class="author-name"><a href="/author/?author=<%= res.name %>"><%= res.name %></a></span>
               <span>评论:(<%= res.comments %>)</span>
               <span>阅读:(<%= res.pv %>)</span>
+            </span>
+            <span>
+              <a class="text-link" href="/article/<%= res.id %>">阅读全文</a>
             </span>
           </div>
         </div>

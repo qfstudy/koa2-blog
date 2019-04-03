@@ -18,8 +18,12 @@ router.get('/article/:articleId/edit', async (ctx, next) => {
     session: ctx.session,
     articleContent: res.md,
     articleTitle: res.title,
-    articleId: res.id
+    articleId: res.id,
+    res: res
   })
+  console.log('edit+++++++++********')
+  console.log(res.md)
+  console.log(res.content)
 })
 
 // post 编辑单篇文章
@@ -36,8 +40,9 @@ router.post('/article/:articleId/edit', async (ctx, next) => {
         allowEdit = true
       }
     })
+  let newContent=converter.makeHtml(content).replace(/\n/gi,"<br/>")
   if (allowEdit) {
-    await mysqlModel.updateArticle([title, converter.makeHtml(content), content, articleId])
+    await mysqlModel.updateArticle([title, newContent, content, articleId])
       .then(() => {
         ctx.body = {
           code: 200,
