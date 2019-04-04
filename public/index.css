@@ -16,6 +16,13 @@ a {
   text-decoration: none;
 }
 
+/* 首页底部 */
+.index-footer{
+  text-align: center;
+  font-size: 12px;
+  color: #a59fac;
+}
+
 /* 公共部分 */
 .message {
   position: fixed;
@@ -117,17 +124,23 @@ a {
 }
 
 /* 导航部分 */
-.header-wrapper .header-right {
-  border-bottom: 1px solid #eee;
+.header-wrapper{
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
 }
+.header-wrapper .header-user-name{
+  margin-left: 30px;
+  font-size: 20px;
+}
+
 .header-wrapper .header-right .header-user .signout{
   cursor: pointer;
   color: #666666;
 }
 .header-wrapper .header-right .header-user {
-  margin-right: 20px;
+  margin-right: 30px;
 }
 
 .header-wrapper .header-right .header-user a {
@@ -138,7 +151,7 @@ a {
 
 .header-wrapper .header-right .header-user a.active {
   color: #3ecf9a;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 /* 写文章部分 */
