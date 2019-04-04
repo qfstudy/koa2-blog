@@ -21,9 +21,6 @@ router.post('/write', async(ctx, next) => {
   let name = ctx.session.user
   let time = moment().format('YYYY-MM-DD HH:mm:ss')
   let avatar
-  console.log('write---------')
-  console.log(converter.makeHtml(content))
-  console.log('-------=======')
   await mysqlModel.searchUser(ctx.session.user)
     .then(res => {
       // console.log(res[0]['avatar'])

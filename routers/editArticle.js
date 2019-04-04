@@ -21,9 +21,6 @@ router.get('/article/:articleId/edit', async (ctx, next) => {
     articleId: res.id,
     res: res
   })
-  console.log('edit+++++++++********')
-  console.log(res.md)
-  console.log(res.content)
 })
 
 // post 编辑单篇文章
