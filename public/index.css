@@ -124,39 +124,51 @@ a {
 }
 
 /* 导航部分 */
-.header-wrapper{
+.header-wrapper .header-had-signin{
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #eee;
 }
-.header-wrapper .header-user-name{
+
+.header-wrapper .header-had-signin .header-user-name{
   margin-left: 30px;
   font-size: 20px;
 }
 
-.header-wrapper .header-right .header-user .signout{
+.header-wrapper .header-had-signin .signout{
   cursor: pointer;
   color: #666666;
 }
-.header-wrapper .header-right .header-user {
+.header-wrapper .header-had-signin .header-signin,
+.header-wrapper .header-had-signout .header-signout {
   margin-right: 30px;
 }
 
-.header-wrapper .header-right .header-user a {
+.header-wrapper .header-had-signin .header-signin a,
+.header-wrapper .header-had-signout .header-signout a {
   display: inline-block;
   padding: 10px 10px;
   color: #666666;
 }
 
-.header-wrapper .header-right .header-user a.active {
+.header-wrapper .header-had-signin .header-signin a.active, 
+.header-wrapper .header-had-signout .header-signout a.active{
   color: #3ecf9a;
   font-weight: 500;
 }
 
+.header-wrapper .clearfix::after{
+  content: " ";
+  display: block;
+  clear: both;
+}
+.header-wrapper .header-had-signout .header-signout{
+  float: right;
+}
+
 /* 写文章部分 */
 .create-container {
-  /* border: 1px solid red; */
   font-size: 16px;
   margin-top: 30px;
 }

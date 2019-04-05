@@ -14,9 +14,10 @@
 		hljs.initHighlightingOnLoad()
 		$(document).ready(function() {
 			$('pre').each(function(i, block) {
-				hljs.highlightBlock(block);
-			});
-		});
+				hljs.highlightBlock(block)
+			})
+		})
+
 		function tooltip(txt){
 			$('.message').text(txt)
 			$('.message').animate({
@@ -28,6 +29,7 @@
 				})
 			},1500)
 		}
+		
 		$(function(){
 			$('.signout').click(function(){
 				$.ajax({
@@ -43,8 +45,9 @@
 							},1500)	
 						}
 					},
-					error: function () {
-						alert('异常');
+					error: function (error) {
+						console.log(error)
+						alert('错误');
 					}
 				})
 			})
@@ -52,50 +55,52 @@
 	</script>
 </head>
 <body>
-  <span class="message"></span>
+	<span class="message"></span>
 	<header class="header-wrapper">
-		<% if(session.user){ %>
-			<span class="header-user-name">hello <%= session.user %></span>
-			<div class="header-right">
-					<div class="header-user">
-						<a target="__blank" href="https://github.com/qfstudy/myblog">GitHub</a>
-						<% if(type === 'allArticle'){ %>
-							<a class="active" href="/">首页</a>
-						<% }else{ %>
-							<a href="/">首页</a>
-						<% }%>
-						<% if(type === 'myArticle'){ %>
-							<a class="active" href="/author/?author=<%= session.user %>">我的文章</a>
-						<% }else{ %>
-							<a href="/author/?author=<%= session.user %>">我的文章</a>
-						<% }%>
-						<% if(type === 'write'){ %>
-							<a class="active" href="/write">写文章</a>
-						<% }else{ %>
-							<a href="/write">写文章</a>
-						<% }%>
-						<span class="signout">登出</span>
-					</div>
-				<% } %>
-				<% if(!session.user){ %>
-					<div class="none-user header-user">
-						<a target="__blank" href="https://github.com/qfstudy/myblog">GitHub</a>
-						<% if(type === 'allArticle'){ %>
-							<a class="active" href="/">首页</a>
-						<% }else{ %>
-							<a href="/">首页</a>
-						<% }%>
-						<% if(type === 'signup'){ %>
-							<a class="active" href="/signup">注册</a>
-						<% }else{ %>
-							<a href="/signup">注册</a>
-						<% }%>
-						<% if(type === 'signin'){ %>
-							<a class="active" href="/signin">登录</a>
-						<% }else{ %>
-							<a href="/signin">登录</a>
-						<% }%>
-					</div>			
-			</div>
-		<% } %>
+		<section class="header-had-signin">
+			<% if(session.user){ %>
+				<span class="header-user-name">hello <%= session.user %></span>
+				<div class="header-signin">
+					<a target="__blank" href="https://github.com/qfstudy/koa2-blog">GitHub</a>
+					<% if(type === 'allArticle'){ %>
+						<a class="active" href="/">首页</a>
+					<% }else{ %>
+						<a href="/">首页</a>
+					<% }%>
+					<% if(type === 'myArticle'){ %>
+						<a class="active" href="/author/?author=<%= session.user %>">我的文章</a>
+					<% }else{ %>
+						<a href="/author/?author=<%= session.user %>">我的文章</a>
+					<% }%>
+					<% if(type === 'write'){ %>
+						<a class="active" href="/write">写文章</a>
+					<% }else{ %>
+						<a href="/write">写文章</a>
+					<% }%>
+					<span class="signout">登出</span>
+				</div>
+			<% } %>
+		</section>
+		<section class="header-had-signout clearfix">
+			<% if(!session.user){ %>
+				<div class="header-signout">
+					<a target="__blank" href="https://github.com/qfstudy/koa2-blog">GitHub</a>
+					<% if(type === 'allArticle'){ %>
+						<a class="active" href="/">首页</a>
+					<% }else{ %>
+						<a href="/">首页</a>
+					<% }%>
+					<% if(type === 'signup'){ %>
+						<a class="active" href="/signup">注册</a>
+					<% }else{ %>
+						<a href="/signup">注册</a>
+					<% }%>
+					<% if(type === 'signin'){ %>
+						<a class="active" href="/signin">登录</a>
+					<% }else{ %>
+						<a href="/signin">登录</a>
+					<% }%>
+				</div>	
+			<% } %>
+		</section>
 	</header>
