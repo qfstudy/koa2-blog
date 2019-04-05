@@ -7,49 +7,80 @@
     
     <ul class="nav">
       <li class="submit">发布文章</li>
+      <li class="preview-submit">预览</li>
     </ul>
     <div class="content-wrapper" id="textarea">
-      <!-- <div class="content" id="write-article" contenteditable="true"></div>    -->
       <textarea class="content" id="write-article"></textarea>
     </div>
-	</div>
+  </div>
+  
+  <div class="write-preview-wrapper">
+    <div class="preview-content markdown-body" contenteditable="true"></div>
+  </div>
 </div>
+
 <script>
-    let ele=document.getElementById("write-article")
-    initTextarea(ele)
-    $('.submit').click(()=>{
-      if ($('.title').val().trim() === '') {
-        tooltip('请输入标题')
-      }else if ($('#write-article').val().trim() === '') {
-        tooltip('请输入内容')
-      }else{
-        console.log('写文章内容')   
-        console.log(document.getElementById('write-article'))
-        $.ajax({
-          url: "/write",
-          data: {
-            title: document.querySelector('.title').value,
-            content: document.getElementById('write-article').value
-          },
-          type: "POST",
-          cache: false,
-          dataType: 'json',
-          success: function (message) {
-            if (message.code === 200) {
-              tooltip('发布成功')
-                setTimeout(()=>{
-                  window.location.href="/"
-                },1000)
-            }else{
-              tooltip('发布失败')
-            }
-          },
-          error: function (message) {
-            console.log('message错误'+message)
-            alert('异常');
+  hljs.initHighlightingOnLoad()
+  // $('.preview-content').ready(function() {
+  //   $('pre').each(function(i, block) {
+  //     hljs.highlightBlock(block)
+  //   })
+  // })
+  let converter = new showdown.Converter()
+  let textareaEle=document.getElementById("write-article")
+  initTextarea(textareaEle)
+
+  $('.preview-submit').click(()=>{
+    let writeEle=document.getElementById('textarea')
+    let previewEle=document.querySelector('.preview-content')
+    $('.content-wrapper').addClass('write-preview')
+    $('.write-preview-wrapper').addClass('write-preview')
+    
+    let inputHandle=function(){
+      let articleConten=document.getElementById('write-article').value
+      previewEle.innerHTML=converter.makeHtml(articleConten).replace(/\n/gi,"<br/>")
+      $('pre').each(function(i, block) {
+        hljs.highlightBlock(block)
+      })
+    }
+
+    writeEle.addEventListener('input',inputHandle)
+  })
+  
+  
+  $('.submit').click(()=>{
+    if ($('.title').val().trim() === '') {
+      tooltip('请输入标题')
+    }else if ($('#write-article').val().trim() === '') {
+      tooltip('请输入内容')
+    }else{
+      console.log('写文章内容')   
+      console.log(document.getElementById('write-article'))
+      $.ajax({
+        url: "/write",
+        data: {
+          title: document.querySelector('.title').value,
+          content: document.getElementById('write-article').value
+        },
+        type: "POST",
+        cache: false,
+        dataType: 'json',
+        success: function (message) {
+          if (message.code === 200) {
+            tooltip('发布成功')
+              setTimeout(()=>{
+                window.location.href="/"
+              },1000)
+          }else{
+            tooltip('发布失败')
           }
-        })			
-      }   
-    })
+        },
+        error: function (message) {
+          console.log('message错误'+message)
+          alert('异常');
+        }
+      })			
+    }   
+  })
 </script>
 <% include footer %>
