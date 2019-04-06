@@ -25,10 +25,10 @@ router.get('/article/:articleId/edit', async (ctx, next) => {
 
 // post 编辑单篇文章
 router.post('/article/:articleId/edit', async (ctx, next) => {
-  let title = ctx.request.body.title,
-    content = ctx.request.body.content,
-    articleId = ctx.params.articleId,
-    allowEdit = true
+  let title = ctx.request.body.title
+  let content = ctx.request.body.content
+  let articleId = ctx.params.articleId
+  let allowEdit = true
   await mysqlModel.searchByArticleId(articleId)
     .then(res => {
       if (res[0].name != ctx.session.user) {

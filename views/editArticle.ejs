@@ -1,20 +1,70 @@
 <%- include("header",{type:''}) %>
-	<div class="create-container">
-		<div class="form create">
+<div class="write-container">
+		<section class="write-title">
 			<div class="title-wrapper">
 				<input placeholder="标题" type="text" class="title" value="<%- articleTitle %>">
 			</div>
-			<ul class="nav">
+			<ul class="write-nav">
 				<li class="submit">保存修改</li>
+				<li class="preview-submit">预览</li>
 			</ul>
+		</section>
+	
+		<section class="write-content">
 			<div class="content-wrapper" id="textarea">
-				<textarea class="content"><%= articleContent %></textarea>   
+				<textarea class="content" id="write-article" spellcheck="false"><%= articleContent %></textarea>
 			</div>
-		</div>
+			<div class="write-preview-wrapper">
+				<div class="preview-content markdown-body"></div>
+			</div>
+		</section>
 	</div>
+
 <script>
-	let ele=document.querySelector('.content')
-	initTextarea(ele)
+	//markdown语法代码高亮
+  hljs.initHighlightingOnLoad()
+  //markdown语法转换
+	let converter = new showdown.Converter()
+	let isPreview=true
+
+	$('.content').on('focus input propertychange', function() {
+    var v = $(this).val()
+    var arr = v.split('\n')
+		var len = arr.length
+		if(isPreview){
+			$(this).height(len*25) 
+		}else{
+			setTimeout(()=>{
+				let contentHeight=document.querySelector('.preview-content').clientHeight				
+				$(this).height(contentHeight) 
+			},0)	
+		}
+	})
+	
+　//预览功能
+  $('.preview-submit').click(()=>{
+    let writeEle=document.getElementById('textarea')
+		let previewEle=document.querySelector('.preview-content')
+		if(isPreview){
+			$('.write-content').addClass('write-preview')
+    }else{
+			$('.write-content').removeClass('write-preview')
+    }
+    let inputHandle=function(){
+      let articleConten=document.getElementById('write-article').value
+      previewEle.innerHTML=converter.makeHtml(articleConten).replace(/\n/gi,"<br/>")
+      $('pre').each(function(i, block) {
+        hljs.highlightBlock(block)
+      })
+		}
+		inputHandle()
+		writeEle.addEventListener('input',inputHandle)
+
+		isPreview=!isPreview
+		document.querySelector('.content').focus()
+  })
+	document.querySelector('.content').focus()
+
 	$('.submit').click(()=>{
 		$.ajax({
             url: '/article/<%= articleId %>/edit',

@@ -1,41 +1,49 @@
 <%- include("header",{type:'write'}) %>
-<div class="create-container">
-	<div class="form create">
+<div class="write-container">
+	<section class="write-title">
     <div class="title-wrapper">
       <input placeholder="标题" type="text" class="title">
     </div>
-    
-    <ul class="nav">
+    <ul class="write-nav">
       <li class="submit">发布文章</li>
       <li class="preview-submit">预览</li>
     </ul>
+  </section>
+
+  <section class="write-content">
     <div class="content-wrapper" id="textarea">
-      <textarea class="content" id="write-article"></textarea>
+      <textarea class="content" id="write-article" spellcheck="false"></textarea>
     </div>
-  </div>
-  
-  <div class="write-preview-wrapper">
-    <div class="preview-content markdown-body" contenteditable="true"></div>
-  </div>
+    <div class="write-preview-wrapper">
+      <div class="preview-content markdown-body"></div>
+    </div>
+  </section>
 </div>
 
 <script>
+  //markdown语法代码高亮
   hljs.initHighlightingOnLoad()
-  // $('.preview-content').ready(function() {
-  //   $('pre').each(function(i, block) {
-  //     hljs.highlightBlock(block)
-  //   })
-  // })
+  //markdown语法转换
   let converter = new showdown.Converter()
-  let textareaEle=document.getElementById("write-article")
-  initTextarea(textareaEle)
-
+  let isPreview=true
+ 
+  $('textarea').on('input propertychange', function() {
+    var v = $(this).val();
+    var arr = v.split('\n');
+    var len = arr.length;
+    $(this).height(len*20);//20为行高;
+  })
+        
+　//预览功能
   $('.preview-submit').click(()=>{
     let writeEle=document.getElementById('textarea')
     let previewEle=document.querySelector('.preview-content')
-    $('.content-wrapper').addClass('write-preview')
-    $('.write-preview-wrapper').addClass('write-preview')
-    
+    if(isPreview){
+      $('.write-content').addClass('write-preview')
+    }else{
+      $('.write-content').removeClass('write-preview')
+    }
+   
     let inputHandle=function(){
       let articleConten=document.getElementById('write-article').value
       previewEle.innerHTML=converter.makeHtml(articleConten).replace(/\n/gi,"<br/>")
@@ -43,19 +51,18 @@
         hljs.highlightBlock(block)
       })
     }
-
+    inputHandle()
     writeEle.addEventListener('input',inputHandle)
+    isPreview=!isPreview
   })
   
-  
+  //将博客内容传到数据库保存
   $('.submit').click(()=>{
     if ($('.title').val().trim() === '') {
       tooltip('请输入标题')
-    }else if ($('#write-article').val().trim() === '') {
+    }else if(document.getElementById('write-article').value.trim()===''){
       tooltip('请输入内容')
     }else{
-      console.log('写文章内容')   
-      console.log(document.getElementById('write-article'))
       $.ajax({
         url: "/write",
         data: {
