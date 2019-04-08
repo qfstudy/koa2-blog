@@ -56,8 +56,8 @@ a {
   border: 1px solid #ddd;
   border-radius: 5px;
   width: 36%;
-  height: 28px;
-  padding: 8px 2px;
+  height: 36px;
+  padding: 20px 2px;
   margin: 15px 0;
 }
 
@@ -116,6 +116,9 @@ a {
 /* 登录 */
 .signin-container {
   margin-top: 220px;
+}
+.signin-container .form{
+  padding: 18px 0;
 }
 
 /* 导航部分 */
