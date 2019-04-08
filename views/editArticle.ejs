@@ -25,29 +25,12 @@
 	</div>
 
 <script>
-
 	//markdown语法代码高亮
   hljs.initHighlightingOnLoad()
   //markdown语法转换
 	let converter = new showdown.Converter()
 	let isPreview=true
-   
-	// $('.content').on('focus input propertychange', function() {
-  //   var v = $(this).val()
-  //   var arr = v.split('\n')
-	// 	var len = arr.length
-	// 	if(isPreview){
-	// 		$(this).height(len*25) 
-	// 		console.log(	$(this).height())
-	// 	}else{
-	// 		setTimeout(()=>{
-	// 			console.dir(document.querySelector('.preview-content'))
-	// 			let contentHeight=document.querySelector('.preview-content').clientHeight				
-	// 			// $(this).height(len*35) 
-	// 			console.log(contentHeight)
-	// 		},0)	
-	// 	}
-	// })
+  //隐藏header部分
 	!(function(){
     $('.header-wrapper').addClass('hidden-header')
   }()) 
@@ -70,7 +53,6 @@
 		}
 		inputHandle()
 		writeEle.addEventListener('input',inputHandle)
-
 		isPreview=!isPreview
   })
 

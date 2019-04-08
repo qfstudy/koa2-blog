@@ -31,15 +31,15 @@
 
 	<div class="article-comment-wrap">
     <% if(session.user){ %>
-      <form class="form">
+      <div>
         <div class="content-wrapper">
           <textarea class="content textarea-comment-content" spellcheck="false"></textarea>   
         </div>
         <span class="submit">提交留言</span>
-      </form>
+      </div>
       <span class="comment-bar"></span>
 		<% } else{ %>
-			<span class="tips">登录之后才可以评论</span>
+			<span class="prompt">登录之后才可以评论</span>
     <% } %>
     
 		<% if (commentLength > 0) { %>
@@ -63,9 +63,9 @@
             </div>
           </div>
         <% }) %>
-      </div>	
+			</div>	
 		<% } else{ %>
-			<span class="tips">还没有评论，赶快去评论吧！</span>
+			<span class="prompt">还没有评论，赶快去评论吧！</span>
 		<% } %>
   </div>
 </div>
@@ -96,7 +96,7 @@
 			})
 		})
 		// 评论
-		var isAllow = true
+		let isAllow = true
 		$('.submit').click(function(){
 			if (!isAllow) return
 			isAllow = false

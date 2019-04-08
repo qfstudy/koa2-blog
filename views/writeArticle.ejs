@@ -30,7 +30,7 @@
   //markdown语法转换
   let converter = new showdown.Converter()
   let isPreview=true
-
+  //隐藏header部分
   !(function(){
     $('.header-wrapper').addClass('hidden-header')
   }()) 
@@ -84,7 +84,7 @@
         },
         error: function (message) {
           console.log('message错误'+message)
-          alert('异常');
+          alert('错误');
         }
       })			
     }   

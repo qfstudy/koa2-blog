@@ -119,9 +119,6 @@ a {
 }
 
 /* 导航部分 */
-/* .header-wrapper{
-  height: 56px;
-} */
 .header-wrapper .header-had-signin{
   display: flex;
   align-items: center;
@@ -440,7 +437,7 @@ html,body,.write-container,.write-container .write-content{
   cursor: pointer;
 }
 
-.article-comment-wrap .tips {
+.article-comment-wrap .prompt {
   display: inline-block;
   font-size: 12px;
   margin: 10px 0;
