@@ -7,6 +7,10 @@
 			<ul class="write-nav">
 				<li class="submit">保存修改</li>
 				<li class="preview-submit">预览</li>
+				
+				<li class="com-bottom">
+					<a href="/">首页</a>
+				</li>
 			</ul>
 		</section>
 	
@@ -21,25 +25,32 @@
 	</div>
 
 <script>
+
 	//markdown语法代码高亮
   hljs.initHighlightingOnLoad()
   //markdown语法转换
 	let converter = new showdown.Converter()
 	let isPreview=true
-
-	$('.content').on('focus input propertychange', function() {
-    var v = $(this).val()
-    var arr = v.split('\n')
-		var len = arr.length
-		if(isPreview){
-			$(this).height(len*25) 
-		}else{
-			setTimeout(()=>{
-				let contentHeight=document.querySelector('.preview-content').clientHeight				
-				$(this).height(contentHeight) 
-			},0)	
-		}
-	})
+   
+	// $('.content').on('focus input propertychange', function() {
+  //   var v = $(this).val()
+  //   var arr = v.split('\n')
+	// 	var len = arr.length
+	// 	if(isPreview){
+	// 		$(this).height(len*25) 
+	// 		console.log(	$(this).height())
+	// 	}else{
+	// 		setTimeout(()=>{
+	// 			console.dir(document.querySelector('.preview-content'))
+	// 			let contentHeight=document.querySelector('.preview-content').clientHeight				
+	// 			// $(this).height(len*35) 
+	// 			console.log(contentHeight)
+	// 		},0)	
+	// 	}
+	// })
+	!(function(){
+    $('.header-wrapper').addClass('hidden-header')
+  }()) 
 	
 　//预览功能
   $('.preview-submit').click(()=>{
@@ -61,9 +72,7 @@
 		writeEle.addEventListener('input',inputHandle)
 
 		isPreview=!isPreview
-		document.querySelector('.content').focus()
   })
-	document.querySelector('.content').focus()
 
 	$('.submit').click(()=>{
 		$.ajax({

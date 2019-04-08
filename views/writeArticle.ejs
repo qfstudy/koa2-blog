@@ -7,6 +7,10 @@
     <ul class="write-nav">
       <li class="submit">发布文章</li>
       <li class="preview-submit">预览</li>
+      
+      <li class="com-bottom">
+					<a href="/">首页</a>
+				</li>
     </ul>
   </section>
 
@@ -26,20 +30,16 @@
   //markdown语法转换
   let converter = new showdown.Converter()
   let isPreview=true
- 
-  $('textarea').on('input propertychange', function() {
-    var v = $(this).val();
-    var arr = v.split('\n');
-    var len = arr.length;
-    $(this).height(len*20);//20为行高;
-  })
-        
+
+  !(function(){
+    $('.header-wrapper').addClass('hidden-header')
+  }()) 
 　//预览功能
   $('.preview-submit').click(()=>{
     let writeEle=document.getElementById('textarea')
     let previewEle=document.querySelector('.preview-content')
     if(isPreview){
-      $('.write-content').addClass('write-preview')
+      $('.write-content').addClass('write-preview')      
     }else{
       $('.write-content').removeClass('write-preview')
     }
